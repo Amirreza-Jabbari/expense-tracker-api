@@ -1,4 +1,4 @@
-# Use the official Python 3.9 slim image as the base image
+# Use the official Python 3.12 slim image as the base image
 FROM python:3.12.3-slim
 
 # Prevent Python from writing pyc files to disk & enable stdout/stderr logging
@@ -12,7 +12,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
-    netcat \
+    netcat-openbsd \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy and install Python dependencies
@@ -29,7 +29,7 @@ RUN chmod +x /app/entrypoint.sh
 # Expose port 8000 for the application
 EXPOSE 8000
 
-# Use the entrypoint script to run migrations, collect static, and launch Gunicorn
+# Use the entrypoint script to run migrations, collect static files, create superuser, and launch Gunicorn
 ENTRYPOINT ["/app/entrypoint.sh"]
 
 # Default command to run Gunicorn

@@ -140,6 +140,19 @@ API tests for both user and expense endpoints have been implemented using Django
 ```bash
 python manage.py test
 ```
+*category valid choices are:*
+
+```python
+CATEGORY_CHOICES = (
+        ('Groceries', 'Groceries'),
+        ('Leisure', 'Leisure'),
+        ('Electronics', 'Electronics'),
+        ('Utilities', 'Utilities'),
+        ('Clothing', 'Clothing'),
+        ('Health', 'Health'),
+        ('Others', 'Others'),
+    )
+```
 
 ---
 

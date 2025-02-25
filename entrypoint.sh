@@ -17,5 +17,11 @@ python manage.py migrate --noinput
 echo "Collecting static files..."
 python manage.py collectstatic --noinput
 
+# Create a superuser if environment variables are provided and the user does not exist
+if [ "$DJANGO_SUPERUSER_EMAIL" ] && [ "$DJANGO_SUPERUSER_PASSWORD" ]; then
+  echo "Creating superuser if not exists..."
+  python manage.py shell -c "import os; from django.contrib.auth import get_user_model; User = get_user_model(); admin_email = os.environ.get('DJANGO_SUPERUSER_EMAIL'); admin_password = os.environ.get('DJANGO_SUPERUSER_PASSWORD'); (admin_email and admin_password and not User.objects.filter(email=admin_email).exists()) and User.objects.create_superuser(email=admin_email, password=admin_password)"
+fi
+
 # Execute the container's main process (Gunicorn)
 exec "$@"
