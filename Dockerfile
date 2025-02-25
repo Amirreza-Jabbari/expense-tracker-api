@@ -1,28 +1,36 @@
-# Use the official Python 3.9 slim image as base
-FROM python:3.9-slim
+# Use the official Python 3.9 slim image as the base image
+FROM python:3.12.3-slim
 
-# Prevent Python from writing pyc files to disc and enable stdout/stderr logging
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+# Prevent Python from writing pyc files to disk & enable stdout/stderr logging
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# Set work directory
+# Set the working directory in the container
 WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
+    netcat \
     && rm -rf /var/lib/apt/lists/*
 
-# Install pip requirements
+# Copy and install Python dependencies
 COPY requirements.txt /app/
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Copy project code
+# Copy the project code into the container
 COPY . /app/
+
+# Copy the entrypoint script and make it executable
+COPY ./entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 # Expose port 8000 for the application
 EXPOSE 8000
 
-# Use Gunicorn to serve the Django app
+# Use the entrypoint script to run migrations, collect static, and launch Gunicorn
+ENTRYPOINT ["/app/entrypoint.sh"]
+
+# Default command to run Gunicorn
 CMD ["gunicorn", "expense_tracker_api.wsgi:application", "--bind", "0.0.0.0:8000"]
