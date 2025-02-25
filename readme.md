@@ -57,8 +57,8 @@ This project was built based on one of the inspiring project ideas featured on [
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Amirreza-Jabbari/antivirus_api.git
-cd antivirus_api
+git clone https://github.com/Amirreza-Jabbari/expense-tracker-api.git
+cd expense-tracker-api
 ```
 
 ---
